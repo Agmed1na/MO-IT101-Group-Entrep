@@ -1,15 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
 package employeesalarycalculator;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 /**
- *
- * @author Brent
+ * Main class to demonstrate employee salary calculation.
  */
 public class EmployeeSalaryCalculator {
 
@@ -19,7 +14,7 @@ public class EmployeeSalaryCalculator {
     public static void main(String[] args) {
         Employee employee = new Employee(1001, "John Doe", LocalDate.of(1990, 5, 15));
         employee.displayInfo();
-        SalaryCalculator.calculateSalary(40);
+        SalaryCalculator.calculateSalary(employee, 40);
     }
 }
 
@@ -33,13 +28,19 @@ class Employee {
         this.name = name;
         this.birthday = birthday;
     }
-    
+
+    public String getName() {
+        return name;
+    }
+
     public void displayInfo() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
+
         System.out.println("Employee Details");
         System.out.println("----------------");
         System.out.println("Employee Number: " + employeeNumber);
         System.out.println("Employee Name: " + name);
-        System.out.println("Birthday: " + birthday.format(DateTimeFormatter.ISO_DATE));
+        System.out.println("Birthday: " + birthday.format(formatter));
         System.out.println();
     }
 }
@@ -51,7 +52,12 @@ class SalaryCalculator {
     private static final double PAGIBIG_RATE = 0.01;
     private static final double TAX_RATE = 0.10;
 
-    public static void calculateSalary(int hoursWorked) {
+    public static void calculateSalary(Employee employee, int hoursWorked) {
+        if (hoursWorked < 0 || hoursWorked > 168) {
+            System.out.println("Error: Invalid number of hours worked. Must be between 0 and 168.");
+            return;
+        }
+
         double grossSalary = hoursWorked * HOURLY_RATE;
         double sss = grossSalary * SSS_RATE;
         double philHealth = grossSalary * PHILHEALTH_RATE;
@@ -59,8 +65,8 @@ class SalaryCalculator {
         double tax = grossSalary * TAX_RATE;
         double netSalary = grossSalary - (sss + philHealth + pagIbig + tax);
 
-        System.out.println("Salary Calculation");
-        System.out.println("------------------");
+        System.out.println("Salary Calculation for " + employee.getName());
+        System.out.println("--------------------------------------");
         System.out.printf("Hours Worked: %d%n", hoursWorked);
         System.out.printf("Hourly Rate: $%.2f%n%n", HOURLY_RATE);
         System.out.printf("Gross Salary: $%.2f%n%n", grossSalary);
